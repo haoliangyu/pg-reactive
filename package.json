@@ -4,7 +4,8 @@
   "description": "PostgreSQL + RxJS v5 = pg-reactive",
   "main": "src/pg-reactive.js",
   "scripts": {
-    "test": "mocha test/**/*.test.js --require babel-register"
+    "test": "mocha ./test/**/*.test.js --require babel-register",
+    "prepublish": "npm test"
   },
   "repository": {
     "type": "git",
