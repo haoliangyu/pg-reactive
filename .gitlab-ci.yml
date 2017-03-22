@@ -15,4 +15,4 @@ cache:
 postgresql:
   script:
    - yarn install
-   - node test
+   - npm test
