@@ -13,6 +13,6 @@ cache:
   - node_modules/
 
 postgresql:
-  test:
+  script:
    - yarn install
    - node test
