@@ -1,0 +1,18 @@
+image: node:latest
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: rx_reactive_test
+  POSTGRES_USER: rx_reactive_tester
+  POSTGRES_PASSWORD: "1esdf3143"
+
+cache:
+  paths:
+  - node_modules/
+
+postgresql:
+  script:
+   - yarn install
+   - npm test
