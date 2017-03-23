@@ -14,7 +14,7 @@ export default class pgrx {
 
   /**
    * Close the current database connection.
-   * @return null
+   * @return {Undefined}  No return
    */
   end() {
     this._client.end();
