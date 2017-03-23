@@ -7,7 +7,7 @@ node_js:
   - "node"
 
 install:
-  - yarn install
+  - yarn
 
 before_script:
   - psql -c 'create user rx_reactive_tester WITH PASSWORD \'1esdf3143\';' -U postgres
@@ -15,3 +15,5 @@ before_script:
 
 script:
 - npm test
+
+cache: yarn
