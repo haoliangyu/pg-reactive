@@ -7,7 +7,7 @@ let test = config.get('test');
 let url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
 let db;
 
-describe('pg-reactive', () => {
+describe('pg-reactive pool', () => {
 
   afterEach(() => {
     if (db) {
