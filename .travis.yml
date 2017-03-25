@@ -9,11 +9,10 @@ node_js:
 install:
   - yarn
 
-before_script:
-  - psql -c 'create user rx_reactive_tester WITH PASSWORD \'1esdf3143\';' -U postgres
-  - psql -c 'create database rx_reactive_test OWNER rx_reactive_tester;' -U postgres
-
 script:
 - npm test
 
 cache: yarn
+
+env:
+- NODE_ENV=travis

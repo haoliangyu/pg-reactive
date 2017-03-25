@@ -3,7 +3,7 @@ import config from 'config';
 import pgrx from '../src/pg-reactive';
 
 let expect = chai.expect;
-let test = config.get('test');
+let test = config.get(process.env.NODE_ENV === 'travis' ? 'travis-test' : 'test');
 let url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
 let db;
 
