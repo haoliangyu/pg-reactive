@@ -61,13 +61,7 @@ export default class pgrx {
     }
 
     if (this._type === 'client') {
-      let query = this._db.query(sql, values);
-
-      return Rx.Observable.create((observer) => {
-        query.on('row', (row) => { observer.next(row); });
-        query.on('error', (error) => { observer.error(error); });
-        query.on('end', () => { observer.complete(); });
-      });
+      return this._queryToObservable(this._db.query, sql, values);
     } else {
       return Rx.Observable.fromPromise(this._db.connect())
         .mergeMap((client) => {
@@ -99,20 +93,55 @@ export default class pgrx {
       throw new Error('Expect the input to be Function, but get ' + typeof fn);
     }
 
-    let observable = fn(this);
+    if (this._type === 'pool') {
+      return Rx.Observable.fromPromise(this._db.connect())
+        .mergeMap((client) => {
+          let observable = fn(this._poolClientWrapper(client));
 
-    if (!isObservable(observable)) {
-      throw new Error('Expect the function to return Observable, but get ' + typeof observable);
+          if (!isObservable(observable)) {
+            return Rx.Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+          }
+
+          return Rx.Observable.merge([
+            this._queryToObservable(client.query, 'BEGIN;'),
+            observable,
+            this._queryToObservable(client.query, 'COMMIT;')
+          ])
+          .skip(1)
+          .skipLast(1)
+          .catch((err) => this._queryToObservable(client.query, 'ROLLBACK;').mergeMap(() => Rx.Observable.throw(err)));
+        });
+    } else {
+      let observable = fn(this);
+
+      if (!isObservable(observable)) {
+        return Rx.Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+      }
+
+      return Rx.Observable.merge([
+        this.query('BEGIN;'),
+        observable,
+        this.query('COMMIT;')
+      ], 1)
+      .skip(1)
+      .skipLast(1)
+      .catch((err) => this.query('ROLLBACK;').mergeMap(() => Rx.Observable.throw(err)));
     }
+  }
 
-    return Rx.Observable.merge(
-      this.query('BEGIN;'),
-      observable,
-      this.query('COMMIT;'),
-      1
-    )
-    .skip(1)
-    .skipLast(1)
-    .catch((err) => this.query('ROLLBACK;').mergeMap(() => Rx.Observable.throw(err)));
+  _queryToObservable(queryFn, sql, values) {
+    let query = queryFn(sql, values);
+
+    return Rx.Observable.create((observer) => {
+      query.on('row', (row) => observer.next(row));
+      query.on('error', (error) => observer.error(error));
+      query.on('end', () => observer.complete());
+    });
+  }
+
+  _poolClientWrapper(client) {
+    return {
+      query: (sql, values) => this._queryToObservable(client.query, sql, values)
+    };
   }
 }
