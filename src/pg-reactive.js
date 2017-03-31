@@ -61,7 +61,7 @@ export default class pgrx {
     }
 
     if (this._type === 'client') {
-      return this._queryToObservable(this._db.query, sql, values);
+      return this._queryToObservable(this._db.query.bind(this._db), sql, values);
     } else {
       return Rx.Observable.fromPromise(this._db.connect())
         .mergeMap((client) => {
@@ -102,14 +102,26 @@ export default class pgrx {
             return Rx.Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
           }
 
+          let queryFn = client.query.bind(client);
+
           return Rx.Observable.merge([
-            this._queryToObservable(client.query, 'BEGIN;'),
+            this._queryToObservable(queryFn, 'BEGIN;'),
             observable,
-            this._queryToObservable(client.query, 'COMMIT;')
+            this._queryToObservable(queryFn, 'COMMIT;'),
+            Rx.Observable.create((observer) => {
+              client.release();
+              observer.complete();
+            })
           ])
           .skip(1)
-          .skipLast(1)
-          .catch((err) => this._queryToObservable(client.query, 'ROLLBACK;').mergeMap(() => Rx.Observable.throw(err)));
+          .skipLast(2)
+          .catch((err) => {
+            return this._queryToObservable(queryFn, 'ROLLBACK;')
+              .mergeMap(() => {
+                client.release();
+                return Rx.Observable.throw(err);
+              });
+          });
         });
     } else {
       let observable = fn(this);
