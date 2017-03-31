@@ -41,6 +41,7 @@
     "mocha": "^3.2.0"
   },
   "dependencies": {
+    "is-observable": "^0.2.0",
     "pg": "^6.1.5",
     "rxjs": "^5.2.0"
   }

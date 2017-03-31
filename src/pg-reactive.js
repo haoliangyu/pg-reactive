@@ -1,6 +1,7 @@
 import Rx from 'rxjs';
 import pg from 'pg';
 import url from 'url';
+import isObservable from 'is-observable';
 
 export default class pgrx {
 
@@ -85,5 +86,33 @@ export default class pgrx {
           });
         });
     }
+  }
+
+  /**
+   * Run database operations using a transaction.
+   * @param  {Function} fn      A function that returns a observable for database operation.
+   * @return {Rx.Observable}    Rx.Observable
+   */
+  transaction(fn) {
+
+    if (typeof fn !== 'function') {
+      throw new Error('Expect the input to be Function, but get ' + typeof fn);
+    }
+
+    let observable = fn(this);
+
+    if (!isObservable(observable)) {
+      throw new Error('Expect the function to return Observable, but get ' + typeof observable);
+    }
+
+    return Rx.Observable.merge(
+      this.query('BEGIN;'),
+      observable,
+      this.query('COMMIT;'),
+      1
+    )
+    .skip(1)
+    .skipLast(1)
+    .catch((err) => this.query('ROLLBACK;').mergeMap(() => Rx.Observable.throw(err)));
   }
 }
