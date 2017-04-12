@@ -1,6 +1,6 @@
 {
   "name": "pg-reactive",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "RxJS 5 interface for PostgreSQL",
   "main": "dist/pg-reactive.js",
   "scripts": {
