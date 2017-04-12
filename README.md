@@ -62,6 +62,22 @@ db.query('SELECT id FROM user')
 
   It will return an observable that emits every row of the query result.
 
+* `pgrx.tx(callback)` Function
+
+  Run queries within a transaction. The callback function receives an object that has a `query()` function to run queries within the transaction and return an observable. To pass the data to the following operator, return an observable in the callback function.
+
+  ``` javascript
+  pgrx.tx((t) => {
+    let insert1 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Tom']);
+    let insert2 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Joe']);
+
+    return insert1.concat(insert2);
+  })
+  .subscribe((row) => console.log(row));
+  ```
+
+  No data will be emitted if any query in a transaction fails.
+
 ## Contribution
 
 PR are welcome!

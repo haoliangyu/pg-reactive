@@ -1,5 +1,7 @@
 import chai from 'chai';
 import config from 'config';
+import Rx from 'rxjs';
+
 import pgrx from '../src/pg-reactive';
 
 let expect = chai.expect;
@@ -75,5 +77,45 @@ describe('pg-reactive pool', () => {
           done();
         }
       );
+  });
+
+  it('should run queries within a transaction.', (done) => {
+    db = new pgrx(url);
+
+    let results = [];
+
+    db.tx((t) => {
+      return t.query('SELECT 1 AS id');
+    })
+    .subscribe(
+      (row) => results.push(row.id),
+      null,
+      () => {
+        expect(results).to.have.lengthOf(1);
+        expect(results[0]).to.equal(1);
+        done();
+      }
+    );
+  });
+
+  it('should fail within a transaction and no data is left/returned.', (done) => {
+    db = new pgrx(url);
+
+    let results = [];
+
+    db.tx((t) => {
+      let insert = t.query('INSERT INTO test (name) VALUES (\'failed\') RETURNING id;');
+      let error = t.query('SELEC 1 AS id');
+
+      return Rx.Observable.concat(insert, error);
+    })
+    .subscribe(
+      (row) => results.push(row.id),
+      (err) => {
+        expect(err).to.be.an('error');
+        expect(results).to.have.lengthOf(0);
+        done();
+      }
+    );
   });
 });

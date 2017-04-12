@@ -4,8 +4,9 @@
   "description": "RxJS 5 interface for PostgreSQL",
   "main": "dist/pg-reactive.js",
   "scripts": {
-    "test": "mocha ./test/**/*.test.js --require babel-register",
+    "test": "node test/preparation/setup.js && mocha test/**/*.test.js --require babel-register",
     "build": "babel src --out-dir dist",
+    "prepush": "npm test",
     "prepublish": "npm test && npm run build"
   },
   "repository": {
@@ -14,9 +15,10 @@
   },
   "keywords": [
     "postgresql",
-    "rxjs",
+    "rxjs5",
+    "rx",
     "observable",
-    "reactive"
+    "reactivex"
   ],
   "author": "Haoliang Yu <haholiang.yu@outlook.com>",
   "license": "MIT",
@@ -38,6 +40,7 @@
     "config": "^1.25.1",
     "eslint": "^3.18.0",
     "eslint-plugin-json": "^1.2.0",
+    "husky": "^0.13.3",
     "mocha": "^3.2.0"
   },
   "dependencies": {
