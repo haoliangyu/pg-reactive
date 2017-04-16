@@ -34,7 +34,13 @@ db.query('SELECT id FROM user')
 
 * `pgrx` Class
 
-  An database connection class implemented with RxJS. It can be initialized with the database url or a crednetial object:
+  Database connection class. It can be initialized with a database url like
+
+  ```
+  pg://user:password@host:port/database
+  ```
+
+  or a crednetial object:
 
   ``` json
   {
@@ -46,7 +52,16 @@ db.query('SELECT id FROM user')
   }
   ```
 
-  `pgrx` will maintain the connection using a connection pool ([pg-pool](https://github.com/brianc/node-pg-pool)) by default. This can be disabled by providing th additional option `{ pool: false }` and then use a single connection ([pg.Client](https://github.com/brianc/node-postgres/wiki/Client)).
+  `pgrx` provides automatic pooling for database connections (see [pg-pool](https://github.com/brianc/node-pg-pool) for details). The automatic pooling can be disabled by providing an additional options:
+
+  ``` javascript
+  import pgrx from 'pg-reactive';
+
+  // the pool option is true by default
+  let db = new pgrx(url, {
+    pool: false
+  });
+  ```
 
 * `pgrx.end()` Function
 
@@ -77,6 +92,10 @@ db.query('SELECT id FROM user')
   ```
 
   No data will be emitted if any query in a transaction fails.
+
+## TypeScript
+
+`pg-reactive` is shipped with its type declaration file and it can be used in a TypeScript directly.
 
 ## Contribution
 
