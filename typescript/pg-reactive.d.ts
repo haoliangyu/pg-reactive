@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 
 export as namespace pgReactive;
-export = pgrx;
 
 interface pgConfig {
   host: string,
@@ -19,7 +18,7 @@ interface transaction {
   query(sql: string, values?: Array<any>): Observable<any>;
 }
 
-declare class pgrx {
+export default class pgrx {
   constructor(config: string|pgConfig, options?: pgrxOptions);
 
   end(): void;
