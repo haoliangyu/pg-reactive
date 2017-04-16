@@ -1,15 +1,30 @@
-/// <reference path="../node_modules/rxjs/Observable.d.ts" />
+import { Observable } from 'rxjs';
 
-declare namespace pgReactive {
+export as namespace pgReactive;
+export = pgrx;
 
-  class pgrx {
-    constructor(config: string|Object, options?: Object);
+interface pgConfig {
+  host: string,
+  port: number,
+  database: string,
+  user: string,
+  password: string
+}
 
-    end();
+interface pgrxOptions {
+  pool?: boolean
+}
 
-    query(sql: string, values?: Array<any>): Observable;
+interface transaction {
+  query(sql: string, values?: Array<any>): Observable<any>;
+}
 
-    tx(fn: Function): Observable;
-  }
+declare class pgrx {
+  constructor(config: string|pgConfig, options?: pgrxOptions);
 
+  end(): void;
+
+  query(sql: string, values?: Array<any>): Observable<any>;
+
+  tx(fn: (tx: transaction) => Observable<any>): Observable<any>;
 }

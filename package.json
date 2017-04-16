@@ -3,16 +3,13 @@
   "version": "0.2.0",
   "description": "RxJS 5 interface for PostgreSQL",
   "main": "dist/pg-reactive.js",
+  "types": "typescript/pg-reactive.d.ts",
   "scripts": {
     "test": "node test/preparation/setup.js && mocha test/**/*.test.js --require babel-register",
     "build": "babel src --out-dir dist",
     "prepush": "npm test",
     "prepublish": "npm test && npm run build"
   },
-  "files": [
-    "dist",
-    "typescript"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/haoliangyu/pg-reactive.git"
@@ -27,9 +24,8 @@
   "author": "Haoliang Yu <haholiang.yu@outlook.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/haoliangyu/pg-reactive/issues"
+    "url": "https://github.com/haoliangyu/pg-reactive/issues"
   },
-  "homepage": "https://gitlab.com/haoliangyu/pg-reactive#README",
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.0",
