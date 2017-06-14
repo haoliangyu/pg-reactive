@@ -1,4 +1,4 @@
-import Rx from 'rxjs';
+import { Observable } from 'rxjs';
 import pg from 'pg';
 import url from 'url';
 import isObservable from 'is-observable';
@@ -48,7 +48,7 @@ export default class pgrx {
    * Perform quary with optional parameters
    * @param  {String}         sql       Query SQL
    * @param  {Array}          [values]  Optional query parameters
-   * @return {Rx.Observable}            Rx.Observable
+   * @return {Observable}            Observable
    */
   query(sql, values) {
 
@@ -63,17 +63,18 @@ export default class pgrx {
     if (this._type === 'client') {
       return this._deferQuery(this._db.query.bind(this._db), sql, values);
     } else {
-      return Rx.Observable.defer(() => Rx.Observable.fromPromise(this._db.connect()))
-      .concatMap((client) => {
-        return this._deferQuery(client.query.bind(client), sql, values, client.release.bind(client));
-      });
+      return Observable
+        .defer(() => Observable.fromPromise(this._db.connect()))
+        .concatMap((client) => {
+          return this._streamQuery(client.query.bind(client), sql, values, client.release.bind(client));
+        });
     }
   }
 
   /**
    * Run database operations using a transaction.
    * @param  {Function} fn      A function that returns an observable for database operation.
-   * @return {Rx.Observable}    Rx.Observable
+   * @return {Observable}       Observable
    */
   tx(fn) {
 
@@ -82,39 +83,33 @@ export default class pgrx {
     }
 
     if (this._type === 'pool') {
-      return Rx.Observable.defer(() => Rx.Observable.fromPromise(this._db.connect()))
+      return Observable.defer(() => Observable.fromPromise(this._db.connect()))
       .concatMap((client) => {
         let observable = fn({
           query: (sql, values) => this._deferQuery(client.query.bind(client), sql, values)
         });
 
         if (!isObservable(observable)) {
-          return Rx.Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+          return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
         }
 
         let queryFn = client.query.bind(client);
 
-        return Rx.Observable.concat(
+        return Observable.concat(
           this._deferQuery(queryFn, 'BEGIN;'),
           observable,
-          this._deferQuery(queryFn, 'COMMIT;'),
-          Rx.Observable.create((observer) => {
-            client.release();
-            observer.complete();
-          })
+          this._deferQuery(queryFn, 'COMMIT;')
         )
         .toArray()
-        .mergeMap((results) => Rx.Observable.of(...results))
+        .mergeMap((results) => Observable.of(...results))
         .catch((err) => {
           let query = queryFn('ROLLBACK;');
 
-          return Rx.Observable.create((observer) => {
-            query.on('end', () => {
-              client.release();
-              observer.error(err);
-            });
+          return Observable.create((observer) => {
+            query.on('end', () => observer.error(err));
           });
-        });
+        })
+        .finally(() => client.release());
       });
     } else {
       let observable = fn({
@@ -122,33 +117,35 @@ export default class pgrx {
       });
 
       if (!isObservable(observable)) {
-        return Rx.Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+        return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
       }
 
-      return Rx.Observable.concat(this.query('BEGIN'), observable, this.query('COMMIT'))
+      return Observable.concat(this.query('BEGIN'), observable, this.query('COMMIT'))
         .toArray()
-        .mergeMap((results) => Rx.Observable.of(...results))
+        .mergeMap((results) => Observable.of(...results))
         .catch((err) => {
           let query = this._db.query('ROLLBACK;');
 
-          return Rx.Observable.create((observer) => {
+          return Observable.create((observer) => {
             query.on('end', () => observer.error(err));
           });
         });
     }
   }
 
-  _deferQuery(queryFn, sql, values, cleanup) {
-    return Rx.Observable.defer(() => {
+  _streamQuery(queryFn, sql, values, cleanup) {
+    return Observable.create((observer) => {
       let query = queryFn(sql, values);
 
-      return Rx.Observable.create((observer) => {
-        query.on('row', (row) => observer.next(row));
-        query.on('error', (error) => observer.error(error));
-        query.on('end', () => observer.complete());
+      query.on('row', (row) => observer.next(row));
+      query.on('error', (error) => observer.error(error));
+      query.on('end', () => observer.complete());
 
-        return cleanup;
-      });
+      return cleanup;
     });
+  }
+
+  _deferQuery(queryFn, sql, values, cleanup) {
+    return Observable.defer(() => this._streamQuery(queryFn, sql, values, cleanup));
   }
 }
