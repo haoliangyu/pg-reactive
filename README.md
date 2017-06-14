@@ -26,7 +26,7 @@ let db = new pgrx('postgres://postgres@$localhost/tester', {
 db.query('SELECT id FROM user')
   .map((row) => row.id)
   .subscribe((id) => {
-    console.log('Shifted ID: ', id);
+    console.log('ID: ', id);
   });
 ```
 

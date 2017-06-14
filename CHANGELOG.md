@@ -1,3 +1,8 @@
+# 0.2.1
+
+* update dependencies
+* simplify code
+
 # 0.2.0
 
 * add transaction support.
