@@ -97,23 +97,27 @@ db.query('SELECT id FROM user')
 
 `pg-reactive` is shipped with its type declaration file and it can be used in a TypeScript directly.
 
-## Contribution
+## How it works?
 
-PR are welcome!
+Before using this library or reading its source code, you should know [Reactive Programming & RxJS](http://reactivex.io/intro.html).
 
-To run the tests, it needs to a test database running with the following credential:
+`pg-reactive` wraps the low-level [pg](https://github.com/haoliangyu/pg-reactive) APIs and exposes a RxJS-compatible interface. The work of `pg-reactive` includes the following three aspects.
 
-``` json
-{
-  "host": "localhost",
-  "port": 5432,
-  "database": "rx_reactive_test",
-  "user": "rx_reactive_tester",
-  "password": "1esdf3143"
-}
-```
+### Managing Pool & Client
 
-Please make sure everything is tested!
+In `pg`, there are two ways to initialize the connections to the database: [Client](https://node-postgres.com/features/connecting) and [Pool](https://node-postgres.com/features/pooling). These two connection ways use different APIs to perform database queries. Like [pg-promise](https://github.com/vitaly-t/pg-promise), `pg-reactive` manages the pool and client connection internally and provide the same API regardless of the connection type. By specifying the connection option `pool`, the user would be able to easily start the connection in either way and forget about the difference in query, transaction, connection management, etc.
+
+### Deferred Query
+
+Unlike [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) as the final state of an asynchronous action, [Observable](http://reactivex.io/documentation/observable.html) works as a data source of asynchronous actions. When providing a observable-based API, `pg-reactive` [cools down](https://stackoverflow.com/questions/32190445/hot-and-cold-observables-are-there-hot-and-cold-operators) the original `pg` functions by deferring their execution using [Rx.Observable.defer()](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#static-method-defer).
+
+In this way, the data stream is controllable with `subscribe()` / `unsubscribe()` without worrying data leak. The data stream is generated using the `row`, `error`, `end` event of the [query](https://github.com/brianc/node-postgres/wiki/Client#events) object of `pg`, which ensures the query result is emitted by rows.
+
+### Transaction as an Observable
+
+The `tx()` function of `pg-reactive` accepts a callback function where the user is able to organization the data flow within a transaction, which may includes different database operations. The data flow behind this function is actually `query('BEGIN') -> query('Your Command') -> query('COMMIT')` and a `query('ROLLBACK')` will be executed in cause of any error.
+
+Note that unlike the query observable, the tx observable doesn't emit data until the query is completely done. Therefore, the tx observable guarantees to emit nothing if error happens.
 
 ## License
 
