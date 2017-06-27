@@ -1,4 +1,4 @@
-# 0.2.2 (2017-06-13)
+## 0.2.2 (2017-06-13)
 
 * update dependencies.
 * simplify code.
