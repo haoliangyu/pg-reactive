@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import pg from 'pg';
+import QueryStream from 'pg-query-stream';
 import url from 'url';
 import isObservable from 'is-observable';
 
@@ -84,33 +85,31 @@ export default class pgrx {
 
     if (this._type === 'pool') {
       return Observable.defer(() => Observable.fromPromise(this._db.connect()))
-      .concatMap((client) => {
-        let observable = fn({
-          query: (sql, values) => this._deferQuery(client.query.bind(client), sql, values)
-        });
-
-        if (!isObservable(observable)) {
-          return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
-        }
-
-        let queryFn = client.query.bind(client);
-
-        return Observable.concat(
-          this._deferQuery(queryFn, 'BEGIN;'),
-          observable,
-          this._deferQuery(queryFn, 'COMMIT;')
-        )
-        .toArray()
-        .mergeMap((results) => Observable.of(...results))
-        .catch((err) => {
-          let query = queryFn('ROLLBACK;');
-
-          return Observable.create((observer) => {
-            query.on('end', () => observer.error(err));
+        .concatMap((client) => {
+          let observable = fn({
+            query: (sql, values) => this._deferQuery(client.query.bind(client), sql, values)
           });
-        })
-        .finally(() => client.release());
-      });
+
+          if (!isObservable(observable)) {
+            return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+          }
+
+          let queryFn = client.query.bind(client);
+          let begin = this._deferQuery(queryFn, 'BEGIN;');
+          let commit = this._deferQuery(queryFn, 'COMMIT;');
+
+          return Observable.concat(begin, observable, commit)
+            .toArray()
+            .mergeMap((results) => Observable.of(...results))
+            .catch((err) => {
+              let query = queryFn('ROLLBACK;');
+
+              return Observable.create((observer) => {
+                query.on('end', () => observer.error(err));
+              });
+            })
+            .finally(() => client.release());
+        });
     } else {
       let observable = fn({
         query: this.query.bind(this)
@@ -135,11 +134,12 @@ export default class pgrx {
 
   _streamQuery(queryFn, sql, values, cleanup) {
     return Observable.create((observer) => {
-      let query = queryFn(sql, values);
+      let query = new QueryStream(sql, values);
+      let stream = queryFn(query);
 
-      query.on('row', (row) => observer.next(row));
-      query.on('error', (error) => observer.error(error));
-      query.on('end', () => observer.complete());
+      stream.on('data', (row) => observer.next(row));
+      stream.on('error', (error) => observer.error(error));
+      stream.on('end', () => observer.complete());
 
       return cleanup;
     });
