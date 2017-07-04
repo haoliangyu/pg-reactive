@@ -1,3 +1,8 @@
+## 0.2.3 (2017-07-04)
+
+* update dependencies.
+* use `pg-query-stream` fro streaming.
+
 ## 0.2.2 (2017-06-13)
 
 * update dependencies.
