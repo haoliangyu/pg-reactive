@@ -1,3 +1,8 @@
+## 0.3.0 (2017-07-04)
+
+* update dependencies.
+* deprecate client mode in favor of pool mode.
+
 ## 0.2.3 (2017-07-04)
 
 * update dependencies.

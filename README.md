@@ -19,9 +19,7 @@ npm install pg-reactive
 ``` javascript
 import pgrx from 'pg-reactive';
 
-let db = new pgrx('postgres://postgres@$localhost/tester', {
-  pool: true
-});
+let db = new pgrx('postgres://postgres@$localhost/tester');
 
 db.query('SELECT id FROM user')
   .map((row) => row.id)
@@ -50,17 +48,6 @@ db.query('SELECT id FROM user')
     "host": "localhost",
     "port": 5432
   }
-  ```
-
-  `pgrx` provides automatic pooling for database connections (see [pg-pool](https://github.com/brianc/node-pg-pool) for details). The automatic pooling can be disabled by providing an additional options:
-
-  ``` javascript
-  import pgrx from 'pg-reactive';
-
-  // the pool option is true by default
-  let db = new pgrx(url, {
-    pool: false
-  });
   ```
 
 * `pgrx.end()` Function
@@ -102,10 +89,6 @@ db.query('SELECT id FROM user')
 Before using this library or reading its source code, you should know [Reactive Programming & RxJS](http://reactivex.io/intro.html).
 
 `pg-reactive` wraps the low-level [pg](https://github.com/haoliangyu/pg-reactive) APIs and exposes a RxJS-compatible interface. The work of `pg-reactive` includes the following three aspects.
-
-### Managing Pool & Client
-
-In `pg`, there are two ways to initialize the connections to the database: [Client](https://node-postgres.com/features/connecting) and [Pool](https://node-postgres.com/features/pooling). These two connection ways use different APIs to perform database queries. Like [pg-promise](https://github.com/vitaly-t/pg-promise), `pg-reactive` manages the pool and client connection internally and provide the same API regardless of the connection type. By specifying the connection option `pool`, the user would be able to easily start the connection in either way and forget about the difference in query, transaction, connection management, etc.
 
 ### Deferred Query
 

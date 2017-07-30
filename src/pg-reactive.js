@@ -11,30 +11,22 @@ export default class pgrx {
    * @param  {String|Object} config    PostgreSQL database connection string or config object
    * @param  {Object}        [options] Connection options
    */
-  constructor(config, options) {
-    options = options || {};
+  constructor(config, options = {}) {
 
-    if (options.pool === false) {
-      this._db = new pg.Client(config);
-      this._db.connect();
-      this._type = 'client';
-    } else {
-      if (typeof config === 'string') {
-        let params = url.parse(config);
-        let auth = params.auth.split(':');
+    if (typeof config === 'string') {
+      let params = url.parse(config);
+      let auth = params.auth.split(':');
 
-        config = {
-          user: auth[0],
-          password: auth[1],
-          host: params.hostname,
-          port: params.port,
-          database: params.pathname.split('/')[1]
-        };
-      }
-
-      this._db = new pg.Pool(config);
-      this._type = 'pool';
+      config = {
+        user: auth[0],
+        password: auth[1],
+        host: params.hostname,
+        port: params.port,
+        database: params.pathname.split('/')[1]
+      };
     }
+
+    this._db = new pg.Pool(config);
   }
 
   /**
@@ -61,15 +53,11 @@ export default class pgrx {
       values = Array.isArray(values) ? values : [values];
     }
 
-    if (this._type === 'client') {
-      return this._deferQuery(this._db.query.bind(this._db), sql, values);
-    } else {
-      return Observable
-        .defer(() => Observable.fromPromise(this._db.connect()))
-        .concatMap((client) => {
-          return this._streamQuery(client.query.bind(client), sql, values, client.release.bind(client));
-        });
-    }
+    return Observable
+      .defer(() => Observable.fromPromise(this._db.connect()))
+      .concatMap((client) => {
+        return this._streamQuery(client.query.bind(client), sql, values, client.release.bind(client));
+      });
   }
 
   /**
@@ -83,53 +71,32 @@ export default class pgrx {
       throw new Error('Expect the input to be Function, but get ' + typeof fn);
     }
 
-    if (this._type === 'pool') {
-      return Observable.defer(() => Observable.fromPromise(this._db.connect()))
-        .concatMap((client) => {
-          let observable = fn({
-            query: (sql, values) => this._deferQuery(client.query.bind(client), sql, values)
-          });
-
-          if (!isObservable(observable)) {
-            return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
-          }
-
-          let queryFn = client.query.bind(client);
-          let begin = this._deferQuery(queryFn, 'BEGIN;');
-          let commit = this._deferQuery(queryFn, 'COMMIT;');
-
-          return Observable.concat(begin, observable, commit)
-            .toArray()
-            .mergeMap((results) => Observable.of(...results))
-            .catch((err) => {
-              let query = queryFn('ROLLBACK;');
-
-              return Observable.create((observer) => {
-                query.on('end', () => observer.error(err));
-              });
-            })
-            .finally(() => client.release());
+    return Observable.defer(() => Observable.fromPromise(this._db.connect()))
+      .concatMap((client) => {
+        let observable = fn({
+          query: (sql, values) => this._deferQuery(client.query.bind(client), sql, values)
         });
-    } else {
-      let observable = fn({
-        query: this.query.bind(this)
+
+        if (!isObservable(observable)) {
+          return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
+        }
+
+        let queryFn = client.query.bind(client);
+        let begin = this._deferQuery(queryFn, 'BEGIN;');
+        let commit = this._deferQuery(queryFn, 'COMMIT;');
+
+        return Observable.concat(begin, observable, commit)
+          .toArray()
+          .mergeMap((results) => Observable.of(...results))
+          .catch((err) => {
+            let query = queryFn('ROLLBACK;');
+
+            return Observable.create((observer) => {
+              query.on('end', () => observer.error(err));
+            });
+          })
+          .finally(() => client.release());
       });
-
-      if (!isObservable(observable)) {
-        return Observable.throw(new Error('Expect the function to return Observable, but get ' + typeof observable));
-      }
-
-      return Observable.concat(this.query('BEGIN'), observable, this.query('COMMIT'))
-        .toArray()
-        .mergeMap((results) => Observable.of(...results))
-        .catch((err) => {
-          let query = this._db.query('ROLLBACK;');
-
-          return Observable.create((observer) => {
-            query.on('end', () => observer.error(err));
-          });
-        });
-    }
   }
 
   _streamQuery(queryFn, sql, values, cleanup) {
