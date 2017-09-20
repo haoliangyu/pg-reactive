@@ -84,18 +84,16 @@ describe('pg-reactive pool', () => {
 
     let results = [];
 
-    db.tx((t) => {
-      return t.query('SELECT 1 AS id');
-    })
-    .subscribe(
-      (row) => results.push(row.id),
-      null,
-      () => {
-        expect(results).to.have.lengthOf(1);
-        expect(results[0]).to.equal(1);
-        done();
-      }
-    );
+    db.tx((t) => t.query('SELECT 1 AS id'))
+      .subscribe(
+        (row) => results.push(row.id),
+        null,
+        () => {
+          expect(results).to.have.lengthOf(1);
+          expect(results[0]).to.equal(1);
+          done();
+        }
+      );
   });
 
   it('should fail within a transaction and no data is left/returned.', (done) => {
@@ -113,6 +111,7 @@ describe('pg-reactive pool', () => {
       (row) => results.push(row.id),
       (err) => {
         expect(err).to.be.an('error');
+        expect(err.message).to.equal('syntax error at or near "SELEC"');
         expect(results).to.have.lengthOf(0);
         done();
       }

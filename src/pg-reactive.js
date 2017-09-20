@@ -89,11 +89,7 @@ export default class pgrx {
           .toArray()
           .mergeMap((results) => Observable.of(...results))
           .catch((err) => {
-            let query = queryFn('ROLLBACK;');
-
-            return Observable.create((observer) => {
-              query.on('end', () => observer.error(err));
-            });
+            return Observable.defer(() => queryFn('ROLLBACK;').then(() => { throw err; }));
           })
           .finally(() => client.release());
       });
