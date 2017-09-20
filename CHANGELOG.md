@@ -1,3 +1,8 @@
+## 0.3.1 (2017-09-19)
+
+* update dependencies.
+* fix error handling at transaction.
+
 ## 0.3.0 (2017-07-04)
 
 * update dependencies.
