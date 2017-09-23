@@ -1,5 +1,9 @@
 ## 0.3.1 (2017-09-19)
 
+* fix require issue (#2).
+
+## 0.3.1 (2017-09-19)
+
 * update dependencies.
 * fix error handling at transaction.
 

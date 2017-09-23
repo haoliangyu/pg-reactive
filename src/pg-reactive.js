@@ -112,3 +112,5 @@ export default class pgrx {
     return Observable.defer(() => this._streamQuery(queryFn, sql, values, cleanup));
   }
 }
+
+module.exports = pgrx;
