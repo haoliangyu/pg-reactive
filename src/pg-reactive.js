@@ -14,8 +14,8 @@ export default class pgrx {
   constructor(config, options = {}) {
 
     if (typeof config === 'string') {
-      let params = url.parse(config);
-      let auth = params.auth.split(':');
+      const params = url.parse(config);
+      const auth = params.auth ? params.auth.split(':') : [];
 
       config = {
         user: auth[0],
