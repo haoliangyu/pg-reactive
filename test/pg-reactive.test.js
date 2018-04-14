@@ -6,7 +6,6 @@ import pgrx from '../src/pg-reactive';
 
 let expect = chai.expect;
 let test = config.get(process.env.NODE_ENV === 'travis' ? 'travis-test' : 'test');
-let url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
 let db;
 
 describe('pg-reactive pool', () => {
@@ -17,11 +16,22 @@ describe('pg-reactive pool', () => {
     }
   });
 
-  it('should build connection with the test database.', () => {
-    expect(() => new pgrx(url)).to.not.throw('successful initialization');
+  it('should connect to the test database with a URL.', () => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
+    const pg = new pgrx(url);
+
+    expect(pg).to.be.an('object');
+  });
+
+  it('should connect to the test database with a URL with no credential.', () => {
+    const url = `postgres://${test.host}:${test.port}/${test.database}`;
+    const pg = new pgrx(url);
+
+    expect(pg).to.be.an('object');
   });
 
   it('should run a query returning one row.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
     db.query('SELECT 1 AS id')
@@ -33,6 +43,7 @@ describe('pg-reactive pool', () => {
   });
 
   it('should run a query returning multiple rows', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     let results = [];
 
     db = new pgrx(url);
@@ -50,6 +61,7 @@ describe('pg-reactive pool', () => {
   });
 
   it('should run a quer with parameters.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     let results = [];
 
     db = new pgrx(url);
@@ -67,6 +79,7 @@ describe('pg-reactive pool', () => {
   });
 
   it('should catch the SQL error.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
     db.query('SELECT id')
@@ -80,6 +93,7 @@ describe('pg-reactive pool', () => {
   });
 
   it('should run queries within a transaction.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
     let results = [];
@@ -97,24 +111,26 @@ describe('pg-reactive pool', () => {
   });
 
   it('should fail within a transaction and no data is left/returned.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
     let results = [];
 
-    db.tx((t) => {
-      let insert = t.query('INSERT INTO test (name) VALUES (\'failed\') RETURNING id;');
-      let error = t.query('SELEC 1 AS id');
+    db
+      .tx((t) => {
+        let insert = t.query('INSERT INTO test (name) VALUES (\'failed\') RETURNING id;');
+        let error = t.query('SELEC 1 AS id');
 
-      return Rx.Observable.concat(insert, error);
-    })
-    .subscribe(
-      (row) => results.push(row.id),
-      (err) => {
-        expect(err).to.be.an('error');
-        expect(err.message).to.equal('syntax error at or near "SELEC"');
-        expect(results).to.have.lengthOf(0);
-        done();
-      }
-    );
+        return Rx.Observable.concat(insert, error);
+      })
+      .subscribe(
+        (row) => results.push(row.id),
+        (err) => {
+          expect(err).to.be.an('error');
+          expect(err.message).to.equal('syntax error at or near "SELEC"');
+          expect(results).to.have.lengthOf(0);
+          done();
+        }
+      );
   });
 });
