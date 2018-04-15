@@ -1,6 +1,10 @@
+## 0.3.3 (2018-04-14)
+
+* fix database url parsing bug (#8).
+
 ## 0.3.2 (2017-09-22)
 
-* fix require issue (#2).
+* fix require() issue (#2).
 
 ## 0.3.1 (2017-09-19)
 
