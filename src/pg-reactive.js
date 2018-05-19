@@ -9,9 +9,8 @@ export default class pgrx {
   /**
    * Initalize a database connection.
    * @param  {String|Object} config    PostgreSQL database connection string or config object
-   * @param  {Object}        [options] Connection options
    */
-  constructor(config, options = {}) {
+  constructor(config) {
 
     if (typeof config === 'string') {
       const params = url.parse(config);
