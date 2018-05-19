@@ -10,13 +10,8 @@ node_js:
 addons:
   postgresql: "9.6"
 
-install:
-  - yarn
-
 script:
 - npm test
-
-cache: yarn
 
 env:
 - NODE_ENV=travis
