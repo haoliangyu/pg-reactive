@@ -5,7 +5,7 @@
   "main": "dist/pg-reactive.js",
   "types": "typescript/pg-reactive.d.ts",
   "scripts": {
-    "test": "node test/preparation/setup.js && mocha test/**/*.test.js --require babel-register",
+    "test": "npm install --no-save rxjs@5 && node test/preparation/setup.js && mocha test/**/*.test.js --require babel-register",
     "build": "babel src --out-dir dist",
     "prepush": "npm test",
     "prepublish": "npm test && npm run build"
@@ -42,10 +42,12 @@
     "husky": "^0.14.3",
     "mocha": "^5.2.0"
   },
+  "peerDepedencies": {
+    "rxjs": ">=5"
+  },
   "dependencies": {
     "is-observable": "^1.1.0",
     "pg": "^7.4.3",
-    "pg-query-stream": "^1.1.1",
-    "rxjs": ">=5"
+    "pg-query-stream": "^1.1.1"
   }
 }
