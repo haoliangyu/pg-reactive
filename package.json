@@ -1,14 +1,22 @@
 {
   "name": "pg-reactive",
-  "version": "0.3.5",
-  "description": "RxJS 5 interface for PostgreSQL",
-  "main": "dist/pg-reactive.js",
-  "types": "typescript/pg-reactive.d.ts",
+  "version": "1.0.0",
+  "description": "RxJS interface for PostgreSQL",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "npm install --no-save rxjs@5 && node test/preparation/setup.js && mocha test/**/*.test.js --require babel-register",
-    "build": "babel src --out-dir dist",
+    "test": "npm install --no-save rxjs@6 && ts-node test/preparation/setup.ts && mocha --require ts-node/register test/index.test.ts",
+    "build": "tsc",
     "prepush": "npm test",
-    "prepublish": "npm test && npm run build"
+    "lint": "tslint src/**/*.ts",
+    "precommit": "npm run lint && npm run build && npm test && lint-staged",
+    "doc": "typedoc --theme minimal --name 'pg-reactive' --out docs --readme README.md --includeDeclarations --excludeExternals src"
+  },
+  "lint-staged": {
+    "src/*.{d.ts,ts}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -16,7 +24,7 @@
   },
   "keywords": [
     "postgresql",
-    "rxjs5",
+    "rxjs6",
     "rx",
     "observable",
     "reactive-x"
@@ -27,26 +35,26 @@
     "url": "https://github.com/haoliangyu/pg-reactive/issues"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.3",
-    "babel-plugin-rewire": "^1.1.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "babel-template": "^6.26.0",
-    "babel-types": "^6.26.0",
+    "@types/chai": "^4.1.3",
+    "@types/config": "0.0.34",
+    "@types/mocha": "^5.2.0",
     "chai": "^4.1.2",
     "config": "^1.30.0",
-    "eslint": "^4.19.1",
-    "eslint-plugin-json": "^1.2.0",
     "husky": "^0.14.3",
-    "mocha": "^5.2.0"
+    "lint-staged": "^7.1.2",
+    "mocha": "^5.2.0",
+    "prettier": "^1.13.0",
+    "ts-node": "^6.0.5",
+    "tslint": "^5.10.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^2.8.3"
   },
   "peerDepedencies": {
-    "rxjs": "5"
+    "rxjs": ">=6"
   },
   "dependencies": {
-    "is-observable": "^1.1.0",
+    "@types/pg": "^7.4.9",
+    "@types/pg-query-stream": "^1.0.1",
     "pg": "^7.4.3",
     "pg-query-stream": "^1.1.1"
   }

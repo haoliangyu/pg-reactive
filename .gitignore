@@ -35,3 +35,4 @@ node_modules
 scripts/**/*.test.*
 
 dist
+docs

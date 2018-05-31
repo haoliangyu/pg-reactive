@@ -1,0 +1,33 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "quotemark": [
+      false
+    ],
+    "arrow-parens": [
+      false
+    ],
+    "trailing-comma": [
+      false
+    ],
+    "variable-name": [
+      true,
+      "allow-leading-underscore"
+    ],
+    "member-ordering": [
+      false
+    ],
+    "object-literal-sort-keys": [
+      false
+    ],
+    "max-line-length": [
+      false
+    ],
+    "ordered-imports": [
+      false
+    ],
+    "no-console": [
+      false
+    ]
+  }
+}

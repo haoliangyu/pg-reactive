@@ -1,11 +1,10 @@
-import chai from 'chai';
-import config from 'config';
-import Rx from 'rxjs';
+import { expect } from 'chai';
+import { concat } from 'rxjs';
+import * as config from 'config';
 
-import pgrx from '../src/pg-reactive';
+import pgrx from '../src/index';
 
-let expect = chai.expect;
-let test = config.get(process.env.NODE_ENV === 'travis' ? 'travis-test' : 'test');
+const test: any = config.get(process.env.NODE_ENV === 'travis' ? 'travis-test' : 'test');
 let db;
 
 describe('pg-reactive pool', () => {
@@ -44,7 +43,7 @@ describe('pg-reactive pool', () => {
 
   it('should run a query returning multiple rows', (done) => {
     const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
-    let results = [];
+    const results = [];
 
     db = new pgrx(url);
 
@@ -62,7 +61,7 @@ describe('pg-reactive pool', () => {
 
   it('should run a quer with parameters.', (done) => {
     const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
-    let results = [];
+    const results = [];
 
     db = new pgrx(url);
 
@@ -84,6 +83,7 @@ describe('pg-reactive pool', () => {
 
     db.query('SELECT id')
       .subscribe(
+        // tslint:disable-next-line
         () => {},
         (error) => {
           expect(error).to.be.an('error');
@@ -96,7 +96,7 @@ describe('pg-reactive pool', () => {
     const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
-    let results = [];
+    const results = [];
 
     db.tx((t) => t.query('SELECT 1 AS id'))
       .subscribe(
@@ -114,14 +114,14 @@ describe('pg-reactive pool', () => {
     const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
     db = new pgrx(url);
 
-    let results = [];
+    const results = [];
 
     db
       .tx((t) => {
-        let insert = t.query('INSERT INTO test (name) VALUES (\'failed\') RETURNING id;');
-        let error = t.query('SELEC 1 AS id');
+        const insert = t.query('INSERT INTO test (name) VALUES (\'failed\') RETURNING id;');
+        const error = t.query('SELEC 1 AS id');
 
-        return Rx.Observable.concat(insert, error);
+        return concat(insert, error);
       })
       .subscribe(
         (row) => results.push(row.id),

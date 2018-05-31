@@ -13,6 +13,16 @@ addons:
 
 script:
 - npm test
+- npm run doc
 
 env:
 - NODE_ENV=travis
+
+deploy:
+  provider: pages
+  local-dir: docs
+  github-token: $GITHUB_TOKEN
+  skip-cleanup: true
+  keep-history: true
+  on:
+    branch: master
