@@ -4,7 +4,7 @@
 
 [![ReactiveX](http://reactivex.io/assets/Rx_Logo_S.png)](http://reactivex.io/)
 
-[RxJS 5](http://reactivex.io/) interface for PostgreSQL in node.js
+[RxJS 6](http://reactivex.io/) interface for PostgreSQL in node.js
 
 
 ## Installation
