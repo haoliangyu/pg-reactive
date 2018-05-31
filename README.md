@@ -4,22 +4,27 @@
 
 [![ReactiveX](http://reactivex.io/assets/Rx_Logo_S.png)](http://reactivex.io/)
 
-[RxJS 6](http://reactivex.io/) interface for PostgreSQL in node.js
+[RxJS](https://github.com/ReactiveX/rxjs) interface for PostgreSQL in node.js
 
 
 ## Installation
-
 
 ``` bash
 npm install pg-reactive
 ```
 
+If you are using RxJS v5, install a previous version:
+
+``` bash
+npm install pg-reactive@^0.3.5
+```
+
 ## Example
 
 ``` javascript
-import pgrx from 'pg-reactive';
+import PgRx from 'pg-reactive';
 
-let db = new pgrx('postgres://postgres@$localhost/tester');
+const db = new PgRx('postgres://postgres@$localhost/tester');
 
 db.query('SELECT id FROM user')
   .map((row) => row.id)
@@ -30,55 +35,8 @@ db.query('SELECT id FROM user')
 
 ## Documentation
 
-* `pgrx` Class
-
-  Database connection class. It can be initialized with a database url like
-
-  ```
-  pg://user:password@host:port/database
-  ```
-
-  or a crednetial object:
-
-  ``` json
-  {
-    "user": "postgres",
-    "database": "tester",
-    "password": "",
-    "host": "localhost",
-    "port": 5432
-  }
-  ```
-
-* `pgrx.end()` Function
-
-  End the current database connection.
-
-* `pgrx.query(sql[, values])` Function
-
-  Run a query with optional values. This function supports the query formating of [pg](https://github.com/brianc/node-postgres/wiki/Client#parameterized-queries) and you can construct the query like
-
-  ``` javascript
-  pgrx.query('SELECT id FROM user WHERE name = $1::text', ['Tom']);
-  ```
-
-  It will return an observable that emits every row of the query result.
-
-* `pgrx.tx(callback)` Function
-
-  Run queries within a transaction. The callback function receives an object that has a `query()` function to run queries within the transaction and return an observable. To pass the data to the following operator, return an observable in the callback function.
-
-  ``` javascript
-  pgrx.tx((t) => {
-    let insert1 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Tom']);
-    let insert2 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Joe']);
-
-    return insert1.concat(insert2);
-  })
-  .subscribe((row) => console.log(row));
-  ```
-
-  No data will be emitted if any query in a transaction fails.
+* [latest (for RxJS 6)](https://haoliangyu.github.io/pg-reactive)
+* [v0.3.x (for RxJS 5)](https://github.com/haoliangyu/pg-reactive/blob/v0.3.5/README.md)
 
 ## TypeScript
 
@@ -88,7 +46,7 @@ db.query('SELECT id FROM user')
 
 Before using this library or reading its source code, you should know [Reactive Programming & RxJS](http://reactivex.io/intro.html).
 
-`pg-reactive` wraps the low-level [pg](https://github.com/haoliangyu/pg-reactive) APIs and exposes a RxJS-compatible interface. The work of `pg-reactive` includes the following three aspects.
+`pg-reactive` wraps the low-level [pg](https://github.com/brianc/node-postgres) APIs and exposes a RxJS-compatible interface. The work of `pg-reactive` includes the following three aspects.
 
 ### Deferred Query
 

@@ -13,6 +13,24 @@ export default class PgRx {
 
   /**
    * Initalize a database connection.
+   *
+   * It can be initialized with a database url like
+   * ```
+   * pg://user:password@host:port/database
+   * ```
+   *
+   * or a crednetial object:
+   *
+   * ``` json
+   * {
+   *   "user": "postgres",
+   *   "database": "tester",
+   *   "password": "",
+   *   "host": "localhost",
+   *   "port": 5432
+   * }
+   * ```
+   *
    * @param config PostgreSQL database connection string or config object
    */
   constructor(config: string | ConnectionConfig) {
@@ -44,7 +62,16 @@ export default class PgRx {
   }
 
   /**
-   * Run quary with optional parameters.
+   * Run a query with optional values.
+   *
+   * This function supports the query formatting of [pg](https://github.com/brianc/node-postgres/wiki/Client#parameterized-queries) and you can construct the query like
+   *
+   * ``` javascript
+   * pgrx.query('SELECT id FROM user WHERE name = $1::text', ['Tom']);
+   * ```
+   *
+   * It will return an observable that emits every row of the query result.
+   *
    * @param  sql    Query SQL
    * @param  values Optional query parameters
    * @return        Observable
@@ -73,8 +100,23 @@ export default class PgRx {
   }
 
   /**
-   * Run database operations using a transaction.
-   * @param  fn A function that returns an observable for database operation.
+   * Run queries within a transaction.
+   *
+   * The callback function receives an object that has a `query()` function to run queries within the transaction and return an observable. To pass the data to the following operator, return an observable in the callback function.
+   *
+   * ``` javascript
+   * pgrx.tx((t) => {
+   *  const insert1 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Tom']);
+   *  const insert2 = t.query('INSERT INTO user (name) VALUES ($1::text) RETURNING id;', ['Joe']);
+   *
+   *  return insert1.concat(insert2);
+   * })
+   * .subscribe((row) => console.log(row));
+   * ```
+   *
+   * No data will be emitted if any query in a transaction fails.
+   *
+   * @param  fn A callback function that returns an observable for database operation.
    * @return    Observable
    */
   public tx(fn: (txClient: ITxClient) => Observable<any>): Observable<any> {
