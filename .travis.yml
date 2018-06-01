@@ -12,6 +12,7 @@ services:
   - postgresql
 
 before_script:
+  - psql -c 'create database travis;' -U postgres
   - npm run setup-db
 
 script:
