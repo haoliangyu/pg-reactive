@@ -8,15 +8,18 @@ node_js:
   - "8"
   - "10"
 
-addons:
-  postgresql: "9.6"
+services:
+  - postgresql
+
+before_script:
+  - npm run setup-db
 
 script:
-- npm test
-- npm run doc
+  - npm test
+  - npm run doc
 
 env:
-- NODE_ENV=travis
+  - NODE_ENV=travis
 
 deploy:
   provider: pages
