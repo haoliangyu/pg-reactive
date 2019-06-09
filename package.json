@@ -7,10 +7,11 @@
   "scripts": {
     "setup-db": "ts-node test/preparation/setup.ts",
     "test": "npm install --no-save rxjs@6 && mocha --require ts-node/register test/index.test.ts",
+    "test:ci": "npm run lint && npm run build && npm test",
     "build": "tsc",
     "prepush": "npm test",
     "lint": "tslint src/**/*.ts",
-    "precommit": "npm run lint && npm run build && npm test && lint-staged",
+    "precommit": "lint-staged",
     "doc": "typedoc --theme minimal --name 'pg-reactive' --out docs --readme README.md --includeDeclarations --excludeExternals src"
   },
   "lint-staged": {

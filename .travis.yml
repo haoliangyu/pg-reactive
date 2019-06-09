@@ -16,7 +16,7 @@ before_script:
   - npm run setup-db
 
 script:
-  - npm test
+  - npm run test:ci
   - npm run doc
 
 env:
