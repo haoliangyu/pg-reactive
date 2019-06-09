@@ -1,6 +1,7 @@
 # pg-reactive
 
 [![npm](https://img.shields.io/npm/v/pg-reactive.svg)](https://www.npmjs.com/package/pg-reactive) [![Build Status](https://travis-ci.org/haoliangyu/pg-reactive.svg?branch=master)](https://travis-ci.org/haoliangyu/pg-reactive)
+
 [![ReactiveX](http://reactivex.io/assets/Rx_Logo_S.png)](http://reactivex.io/)
 
 [RxJS](https://github.com/ReactiveX/rxjs) interface for PostgreSQL in node.js
