@@ -1,5 +1,7 @@
 # pg-reactive
 
+![npm](https://img.shields.io/npm/v/pg-reactive.svg)
+
 ![build status](https://travis-ci.org/haoliangyu/pg-reactive.svg?branch=master)
 
 [![ReactiveX](http://reactivex.io/assets/Rx_Logo_S.png)](http://reactivex.io/)

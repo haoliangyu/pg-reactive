@@ -1,3 +1,9 @@
+# Change Log
+
+## 1.0.1 (2019-06-08)
+
+* update dependencies
+
 ## 0.3.3 (2018-04-14)
 
 * fix database url parsing bug (#8).
