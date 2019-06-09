@@ -985,7 +985,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L12">index.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L12">index.ts:12</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -993,16 +993,14 @@ img { max-width: 100%; }
 								<p>Initalize a database connection.</p>
 							</div>
 							<p>It can be initialized with a database url like</p>
-							<pre><code><span class="hljs-symbol">pg:</span><span class="hljs-comment">//user:password@host:port/database</span>
-</code></pre><p>or a crednetial object:</p>
-							<pre><code class="lang-json">{
+							<pre><code>pg://<span class="hljs-keyword">user</span>:<span class="hljs-keyword">password</span>@host:port/<span class="hljs-keyword">database</span></code></pre><p>or a crednetial object:</p>
+							<pre><code class="language-json">{
   <span class="hljs-attr">"user"</span>: <span class="hljs-string">"postgres"</span>,
   <span class="hljs-attr">"database"</span>: <span class="hljs-string">"tester"</span>,
   <span class="hljs-attr">"password"</span>: <span class="hljs-string">""</span>,
   <span class="hljs-attr">"host"</span>: <span class="hljs-string">"localhost"</span>,
   <span class="hljs-attr">"port"</span>: <span class="hljs-number">5432</span>
-}
-</code></pre>
+}</code></pre>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1028,7 +1026,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">_db<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pool</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L12">index.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L12">index.ts:12</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1045,7 +1043,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L155">index.ts:155</a></li>
+								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L155">index.ts:155</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1077,7 +1075,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L60">index.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L60">index.ts:60</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1099,7 +1097,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L79">index.ts:79</a></li>
+								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L79">index.ts:79</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1107,8 +1105,7 @@ img { max-width: 100%; }
 								<p>Run a query with optional values.</p>
 							</div>
 							<p>This function supports the query formatting of <a href="https://github.com/brianc/node-postgres/wiki/Client#parameterized-queries">pg</a> and you can construct the query like</p>
-							<pre><code class="lang-javascript">pgrx.query(<span class="hljs-string">'SELECT id FROM user WHERE name = $1::text'</span>, [<span class="hljs-string">'Tom'</span>]);
-</code></pre>
+							<pre><code class="language-javascript">pgrx.query(<span class="hljs-string">'SELECT id FROM user WHERE name = $1::text'</span>, [<span class="hljs-string">'Tom'</span>]);</code></pre>
 							<p>It will return an observable that emits every row of the query result.</p>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1141,7 +1138,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/aa3df1f/src/index.ts#L122">index.ts:122</a></li>
+								<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/23a3bdc/src/index.ts#L122">index.ts:122</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1149,14 +1146,13 @@ img { max-width: 100%; }
 								<p>Run queries within a transaction.</p>
 							</div>
 							<p>The callback function receives an object that has a <code>query()</code> function to run queries within the transaction and return an observable. To pass the data to the following operator, return an observable in the callback function.</p>
-							<pre><code class="lang-javascript">pgrx.tx(<span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+							<pre><code class="language-javascript">pgrx.tx(<span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
  <span class="hljs-keyword">const</span> insert1 = t.query(<span class="hljs-string">'INSERT INTO user (name) VALUES ($1::text) RETURNING id;'</span>, [<span class="hljs-string">'Tom'</span>]);
  <span class="hljs-keyword">const</span> insert2 = t.query(<span class="hljs-string">'INSERT INTO user (name) VALUES ($1::text) RETURNING id;'</span>, [<span class="hljs-string">'Joe'</span>]);
 
  <span class="hljs-keyword">return</span> insert1.concat(insert2);
 })
-.subscribe(<span class="hljs-function">(<span class="hljs-params">row</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(row));
-</code></pre>
+.subscribe(<span class="hljs-function">(<span class="hljs-params">row</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(row));</code></pre>
 							<p>No data will be emitted if any query in a transaction fails.</p>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
