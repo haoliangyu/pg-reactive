@@ -1,6 +1,6 @@
 import { Observable, defer, from, concat, of, ObservableInput } from "rxjs";
 import { concatMap, toArray, catchError, finalize } from "rxjs/operators";
-import { Pool, PoolClient, ConnectionConfig, Query } from "pg";
+import { Pool, PoolClient, ConnectionConfig } from "pg";
 import QueryStream = require("pg-query-stream");
 import * as url from "url";
 
