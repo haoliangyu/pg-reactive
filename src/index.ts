@@ -1,6 +1,6 @@
-import { Observable, defer, from, concat, of } from "rxjs";
+import { Observable, defer, from, concat, of, ObservableInput } from "rxjs";
 import { concatMap, toArray, catchError, finalize } from "rxjs/operators";
-import { Pool, PoolClient, ConnectionConfig } from "pg";
+import { Pool, PoolClient, ConnectionConfig, Query } from "pg";
 import QueryStream = require("pg-query-stream");
 import * as url from "url";
 
@@ -76,27 +76,31 @@ export default class PgRx {
    * @param  values Optional query parameters
    * @return        Observable
    */
-  public query(sql: string, values?: any[]): Observable<any> {
+  public query<V = any, T = any>(sql: string, values?: V | V[]): Observable<T> {
     if (!sql || typeof sql !== "string") {
       throw new Error("Invalid queary: " + sql);
     }
 
-    if (values) {
-      values = Array.isArray(values) ? values : [values];
-    }
+    const valuesArray = values
+      ? Array.isArray(values)
+        ? values
+        : [values]
+      : undefined;
 
     const observable = defer(() => this._db.connect());
-    const doQuery = concatMap((client: PoolClient) => {
-      const queryFn = client.query.bind(client);
-      return this._streamQuery(
-        queryFn,
-        sql,
-        values,
-        client.release.bind(client)
-      );
-    });
+    const doQuery = concatMap<PoolClient, ObservableInput<T>>(
+      (client: PoolClient) => {
+        const queryFn = client.query.bind(client);
+        return this._streamQuery<V, T>(
+          queryFn,
+          sql,
+          valuesArray,
+          client.release.bind(client)
+        );
+      }
+    );
 
-    return observable.pipe(doQuery);
+    return observable.pipe<T>(doQuery);
   }
 
   /**
@@ -152,12 +156,12 @@ export default class PgRx {
     return observable.pipe(doQuery);
   }
 
-  private _streamQuery(
+  private _streamQuery<V, T>(
     queryFn: any,
     sql: string,
-    values?: any[],
+    values?: V[],
     cleanup?: any
-  ) {
+  ): Observable<T> {
     return Observable.create(observer => {
       const query = new QueryStream(sql, values);
       const stream = queryFn(query);
