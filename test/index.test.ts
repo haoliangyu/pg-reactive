@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { concat } from 'rxjs';
+import { map } from "rxjs/operators";
 import * as config from 'config';
 
 import pgrx from '../src/index';
@@ -56,6 +57,21 @@ describe('pg-reactive pool', () => {
           expect(results).to.deep.equal([1, 2]);
           done();
         }
+      );
+  });
+
+  it('should run a pipe with operators.', (done) => {
+    const url = `postgres://${test.user}:${test.password}@${test.host}:${test.port}/${test.database}`;
+    db = new pgrx(url);
+
+    db.query('SELECT 1 AS id')
+      .pipe(
+        map((row: any) => row.id)
+      )
+      .subscribe(
+        (row) => expect(row).to.equal(1),
+        null,
+        () => done()
       );
   });
 
