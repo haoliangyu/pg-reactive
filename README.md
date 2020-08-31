@@ -23,11 +23,14 @@ npm install pg-reactive@^0.3.5
 
 ``` javascript
 import PgRx from 'pg-reactive';
+import { map } from "rxjs/operators";
 
 const db = new PgRx('postgres://postgres@$localhost/tester');
 
 db.query('SELECT id FROM user')
-  .map((row) => row.id)
+  .pipe(
+    map((row) => row.id)
+  )
   .subscribe((id) => {
     console.log('ID: ', id);
   });

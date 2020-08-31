@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.2 (2020-08-31)
+
+* update dependencies
+* update wrong code in the README
+
 ## 1.0.1 (2019-06-08)
 
 * update dependencies
