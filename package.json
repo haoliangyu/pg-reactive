@@ -12,7 +12,7 @@
     "lint": "tslint src/**/*.ts",
     "precommit": "lint-staged",
     "prepublish": "tsc",
-    "doc": "typedoc --theme minimal --name 'pg-reactive' --out docs --readme README.md --includeDeclarations --excludeExternals src"
+    "doc": "typedoc --theme minimal --name 'pg-reactive' --out docs --readme README.md --excludeExternals src"
   },
   "lint-staged": {
     "src/*.{d.ts,ts,json}": [
