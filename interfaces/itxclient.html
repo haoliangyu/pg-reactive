@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>pg-reactive | pg-reactive</title>
+	<title>ITxClient | pg-reactive</title>
 	<meta name="description" content="Documentation for pg-reactive">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -2646,7 +2646,7 @@ img {
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="index.html">pg-reactive</a></strong>
+					<strong><a href="../index.html">pg-reactive</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -2675,94 +2675,75 @@ img {
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class">
-			<a href="classes/default.html" class="tsd-kind-icon">default</a>
+			<a href="../classes/default.html" class="tsd-kind-icon">default</a>
 		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/itxclient.html" class="tsd-kind-icon">ITx<wbr>Client</a>
+		<li class="current tsd-kind-interface">
+			<a href="itxclient.html" class="tsd-kind-icon">ITx<wbr>Client</a>
+			<ul>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="itxclient.html#query" class="tsd-kind-icon">query</a>
+				</li>
+			</ul>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<div class="tsd-panel tsd-typography">
-			<a href="#pg-reactive" id="pg-reactive" style="color: inherit; text-decoration: none;">
-				<h1>pg-reactive</h1>
-			</a>
-			<p><a href="https://www.npmjs.com/package/pg-reactive"><img src="https://img.shields.io/npm/v/pg-reactive.svg" alt="npm"></a> <a href="https://travis-ci.org/haoliangyu/pg-reactive"><img src="https://travis-ci.org/haoliangyu/pg-reactive.svg?branch=master" alt="Build Status"></a></p>
-			<p><a href="http://reactivex.io/"><img src="http://reactivex.io/assets/Rx_Logo_S.png" alt="ReactiveX"></a></p>
-			<p><a href="https://github.com/ReactiveX/rxjs">RxJS</a> interface for PostgreSQL in node.js</p>
-			<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-				<h2>Installation</h2>
-			</a>
-			<pre><code class="language-bash"><span style="color: #000000">npm install pg-reactive</span>
-</code></pre>
-			<p>If you are using RxJS v5, install a previous version:</p>
-			<pre><code class="language-bash"><span style="color: #000000">npm install pg-reactive@^0.3.5</span>
-</code></pre>
-			<a href="#example" id="example" style="color: inherit; text-decoration: none;">
-				<h2>Example</h2>
-			</a>
-			<pre><code class="language-javascript"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">PgRx</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;pg-reactive&#039;</span><span style="color: #000000">;</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">map</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;rxjs/operators&quot;</span><span style="color: #000000">;</span>
-
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">db</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">PgRx</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;postgres://postgres@$localhost/tester&#039;</span><span style="color: #000000">);</span>
-
-<span style="color: #001080">db</span><span style="color: #000000">.</span><span style="color: #795E26">query</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;SELECT id FROM user&#039;</span><span style="color: #000000">)</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">pipe</span><span style="color: #000000">(</span>
-<span style="color: #000000">    </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">row</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">row</span><span style="color: #000000">.</span><span style="color: #001080">id</span><span style="color: #000000">)</span>
-<span style="color: #000000">  )</span>
-<span style="color: #000000">  .</span><span style="color: #795E26">subscribe</span><span style="color: #000000">((</span><span style="color: #001080">id</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;ID: &#039;</span><span style="color: #000000">, </span><span style="color: #001080">id</span><span style="color: #000000">);</span>
-<span style="color: #000000">  });</span>
-</code></pre>
-			<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
-				<h2>Documentation</h2>
-			</a>
-			<ul>
-				<li><a href="https://haoliangyu.github.io/pg-reactive">latest (for RxJS 6)</a></li>
-				<li><a href="https://github.com/haoliangyu/pg-reactive/blob/v0.3.5/README.md">v0.3.x (for RxJS 5)</a></li>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">ITxClient</span>
+				</li>
 			</ul>
-			<a href="#typescript" id="typescript" style="color: inherit; text-decoration: none;">
-				<h2>TypeScript</h2>
-			</a>
-			<p><code>pg-reactive</code> is shipped with its type declaration file and it can be used in a TypeScript directly.</p>
-			<a href="#how-it-works" id="how-it-works" style="color: inherit; text-decoration: none;">
-				<h2>How it works?</h2>
-			</a>
-			<p>Before using this library or reading its source code, you should know <a href="http://reactivex.io/intro.html">Reactive Programming &amp; RxJS</a>.</p>
-			<p><code>pg-reactive</code> wraps the low-level <a href="https://github.com/brianc/node-postgres">pg</a> APIs and exposes a RxJS-compatible interface. The work of <code>pg-reactive</code> includes the following three aspects.</p>
-			<a href="#deferred-query" id="deferred-query" style="color: inherit; text-decoration: none;">
-				<h3>Deferred Query</h3>
-			</a>
-			<p>Unlike <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> as the final state of an asynchronous action, <a href="http://reactivex.io/documentation/observable.html">Observable</a> works as a data source of asynchronous actions. When providing a observable-based API, <code>pg-reactive</code> <a href="https://stackoverflow.com/questions/32190445/hot-and-cold-observables-are-there-hot-and-cold-operators">cools down</a> the original <code>pg</code> functions by deferring their execution using <a href="http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#static-method-defer">Rx.Observable.defer()</a>.</p>
-			<p>In this way, the data stream is controllable with <code>subscribe()</code> / <code>unsubscribe()</code> without worrying data leak. The data stream is generated using the <code>row</code>, <code>error</code>, <code>end</code> event of the <a href="https://github.com/brianc/node-postgres/wiki/Client#events">query</a> object of <code>pg</code>, which ensures the query result is emitted by rows.</p>
-			<a href="#transaction-as-an-observable" id="transaction-as-an-observable" style="color: inherit; text-decoration: none;">
-				<h3>Transaction as an Observable</h3>
-			</a>
-			<p>The <code>tx()</code> function of <code>pg-reactive</code> accepts a callback function where the user is able to organization the data flow within a transaction, which may includes different database operations. The data flow behind this function is actually <code>query(&#39;BEGIN&#39;) -&gt; query(&#39;Your Command&#39;) -&gt; query(&#39;COMMIT&#39;)</code> and a <code>query(&#39;ROLLBACK&#39;)</code> will be executed in cause of any error.</p>
-			<p>Note that unlike the query observable, the tx observable doesn&#39;t emit data until the query is completely done. Therefore, the tx observable guarantees to emit nothing if error happens.</p>
-			<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-				<h2>License</h2>
-			</a>
-			<p>MIT</p>
-		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/default.html" class="tsd-kind-icon">default</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="itxclient.html#query" class="tsd-kind-icon">query</a></li>
 						</ul>
 					</section>
-					<section class="tsd-index-section ">
-						<h3>Interfaces</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface"><a href="interfaces/itxclient.html" class="tsd-kind-icon">ITx<wbr>Client</a></li>
-						</ul>
-					</section>
+				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="query" class="tsd-anchor"></a>
+				<h3>query</h3>
+				<div class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>sql<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, values<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/haoliangyu/pg-reactive/blob/223607c/src/index.ts#L8">index.ts:8</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-signature">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-interface">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>sql<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, values<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>sql: <span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li>
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> values: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Observable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</section>
 		</section>
