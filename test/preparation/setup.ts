@@ -1,9 +1,10 @@
 import { Pool } from "pg";
-import * as config from "config";
-import * as fs from "fs";
+import * as fs from "fs-extra";
 import * as path from "path";
 
-const dbConfig = config.get(process.env.CI === 'true' ? 'ci-test' : 'test');
+const config = fs.readJSONSync(path.join(__dirname, '../../config/default.json'));
+const dbConfig = config[process.env.CI === 'true' ? 'ci-test' : 'test'];
+
 const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf-8');
 const pool = new Pool(dbConfig);
 
