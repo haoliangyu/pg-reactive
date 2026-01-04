@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.0.3 (2026-01-04)
+## 1.0.4 (2026-01-04)
 
 * update dependencies
 
