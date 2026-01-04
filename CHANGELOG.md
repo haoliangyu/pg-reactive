@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.3 (2026-01-04)
+
+* update dependencies
+
 ## 1.0.2 (2020-08-31)
 
 * update dependencies
