@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import { concat } from 'rxjs';
 import { map } from "rxjs/operators";
-import * as config from 'config';
+import * as fs from 'fs-extra';
+import * as path from "path";
 
 import pgrx from '../src/index';
 
-const test: any = config.get(process.env.NODE_ENV === 'travis' ? 'travis-test' : 'test');
+const config = fs.readJSONSync(path.join(__dirname, '../config/default.json'));
+const test: any = config[process.env.CI === 'true' ? 'ci-test' : 'test'];
 let db;
 
 describe('pg-reactive pool', () => {
