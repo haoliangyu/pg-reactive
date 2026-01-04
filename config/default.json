@@ -6,11 +6,11 @@
     "user": "rx_reactive_tester",
     "password": "1esdf3143"
   },
-  "travis-test": {
+  "ci-test": {
     "host": "localhost",
     "port": 5432,
-    "database": "travis_ci_test",
+    "database": "ci_test",
     "user": "postgres",
-    "password": ""
+    "password": "test_db_password"
   }
 }

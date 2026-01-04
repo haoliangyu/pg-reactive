@@ -14,7 +14,8 @@ jobs:
         image: postgres:12
         env:
           POSTGRES_USER: postgres
-          POSTGRES_DB: travis_ci_test
+          POSTGRES_PASSWORD: test_db_password
+          POSTGRES_DB: ci_test
         ports:
           - 5432:5432
         options: >-
@@ -31,27 +32,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Lint code
         run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-      - name: Wait for Postgres
-        run: |
-          for i in {1..30}; do
-            pg_isready -h localhost -p 5432 -U postgres && break || sleep 1;
-          done
-        env:
-          PGPASSWORD: ''
-
-      - name: Create test database
-        run: |
-          psql -c "create database travis_ci_test;" -U postgres || true
 
       - name: Run DB setup script
         run: npm run setup-db
