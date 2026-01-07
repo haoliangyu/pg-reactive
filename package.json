@@ -7,6 +7,7 @@
   "scripts": {
     "setup-db": "ts-node test/preparation/setup.ts",
     "test": "npm install --no-save rxjs@6 && mocha --require ts-node/register test/index.test.ts",
+    "test:rxjs7": "npm install --no-save rxjs@7 && mocha --require ts-node/register test/index.test.ts",
     "build": "tsc",
     "lint": "tslint src/**/*.ts",
     "precommit": "lint-staged",
