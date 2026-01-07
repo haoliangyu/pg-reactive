@@ -36,7 +36,7 @@ db.query('SELECT id FROM user')
 
 ## Documentation
 
-* [latest (for RxJS 6)](https://haoliangyu.github.io/pg-reactive)
+* [latest (for RxJS 6+)](https://haoliangyu.github.io/pg-reactive)
 * [v0.3.x (for RxJS 5)](https://github.com/haoliangyu/pg-reactive/blob/v0.3.5/README.md)
 
 ## TypeScript

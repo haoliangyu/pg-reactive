@@ -44,7 +44,7 @@ jobs:
         run: npm run setup-db
 
       - name: Run tests (CI)
-        run: npm run test:rxjs7
+        run: npm run test
 
       - name: Build docs
         run: npm run doc

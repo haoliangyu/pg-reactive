@@ -6,7 +6,8 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "setup-db": "ts-node test/preparation/setup.ts",
-    "test": "npm install --no-save rxjs@6 && mocha --require ts-node/register test/index.test.ts",
+    "test": "npm run test:rxjs7 && npm run test:rxjs6",
+    "test:rxjs6": "npm install --no-save rxjs@6 && mocha --require ts-node/register test/index.test.ts",
     "test:rxjs7": "npm install --no-save rxjs@7 && mocha --require ts-node/register test/index.test.ts",
     "build": "tsc",
     "lint": "tslint src/**/*.ts",
